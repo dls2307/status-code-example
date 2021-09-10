@@ -29,7 +29,24 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
     const handleResponse = (xhr) => {
+      const content = document.getElementById('content');
+      const obj=JSON.parse(xhr.response);
 
+      switch(xhr.status){
+        case 200:
+          content.innerHTML = `<b>Success</b>`
+          break;
+        case 400:
+          content.innerHTML= `<b>Bad Reqeuest</b>`;
+          break;
+        case 404:
+          content.innerHTML = `<b>Resource not Found</b>`;
+          break;
+        default:
+          content.innerHTML = `<p>Error code not implemented by client</p>`;
+          break;
+      }
+      content.innerHTML+=`<p>${obj.message}</p>`;
     };
     
     const sendAjax = (url) => {
@@ -47,7 +64,13 @@
       const badRequestButton = document.querySelector("#badRequest");
       const notFoundButton = document.querySelector("#notFound");
 
-      
+      const success = () => sendAjax('/success');
+      const badRequest = () => sendAjax('/badRequest');
+      const notFound = () =>sendAjax('/notFoundUrl');
+
+      successButton.addEventListener('click',success);
+      badRequestButton.addEventListener('click',badRequest);
+      notFoundButton.addEventListener('click',notFound);
     };
 
     window.onload = init;
